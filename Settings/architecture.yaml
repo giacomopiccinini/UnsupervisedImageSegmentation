@@ -1,0 +1,7 @@
+n_features: 100
+
+n_classes: 5
+
+n_convolutions: 2
+
+min_classes: 3

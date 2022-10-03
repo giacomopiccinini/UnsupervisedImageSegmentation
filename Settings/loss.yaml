@@ -1,0 +1,5 @@
+# Weight of similarity loss function
+mu: 1
+
+# Weight of continuity loss function
+nu: 1
