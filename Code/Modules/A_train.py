@@ -1,12 +1,12 @@
 def train(args):
 
-    """ Train Segmentation Network"""
+    """Train Segmentation Network"""
 
     import torch
     import numpy as np
 
     from tqdm import tqdm
-    from torch.optim      import SGD
+    from torch.optim import SGD
     from torch.utils.data import DataLoader
 
     from Code.Network.segnet import SegNet
@@ -15,32 +15,32 @@ def train(args):
 
     # Initialise network
     model = SegNet(args)
-    
+
     # Enable CUDA and set up GPU
     if torch.cuda.is_available():
         model.cuda()
 
-    model.train()   
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    model.to(device = device)
+    model.train()
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model.to(device=device)
 
     # Set optimizer
     optimizer = SGD(model.parameters(), lr=args.learning_rate, momentum=args.momentum)
 
     # Load dataset and loader for PyTorch
     dataset = Data(args.path)
-    loader  = DataLoader(dataset)
-    
+    loader = DataLoader(dataset)
+
     print("\nTraining the model...")
     # Star training
     for epoch in range(args.epochs):
-        
-        print('\nEpoch:', epoch + 1, '/', args.epochs)
+
+        print("\nEpoch:", epoch + 1, "/", args.epochs)
 
         # Load batch and discard file names
         for batch, _ in tqdm(loader):
-            
-            batch = batch.to(device = device)
+
+            batch = batch.to(device=device)
 
             # Forwarding
             optimizer.zero_grad()
@@ -64,7 +64,7 @@ def train(args):
             optimizer.step()
 
         # Print summary on epoch end
-        print('\nResults: ', 'Number of labels :', n_labels, ' | Loss :', loss.item())
+        print("\nResults: ", "Number of labels :", n_labels, " | Loss :", loss.item())
 
         # Check that we do not obtain less labels than needed
         if n_labels <= args.min_classes:

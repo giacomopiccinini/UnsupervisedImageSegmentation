@@ -3,9 +3,10 @@ import numpy as np
 import cv2
 from Code.Utilities.loading_utils import load
 
+
 def plot(image, response_map):
 
-    """ Plot segmented image as the model is trained """
+    """Plot segmented image as the model is trained"""
 
     # Load training parameters
     architecture_parameters = load("architecture.yaml")
