@@ -29,6 +29,9 @@ def parse():
     parser.add_argument('--nu_x', const=1, default = 1, nargs='?', type=int, help='Integer for weight of continuity loss function along x')
     parser.add_argument('--nu_y', const=1, default = 1, nargs='?', type=int, help='Integer for weight of continuity loss function along y')
 
+    # Parse model parameters
+    parser.add_argument('--model_path', const="Model/model.pt", default = "Model/model.pt", nargs='?', type=str, help='String for saved model')
+
     args = parser.parse_args()
 
     return args
