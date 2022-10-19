@@ -1,5 +1,6 @@
 matplotlib==3.5.3
 numpy==1.21.5
 PyYAML==6.0
-torch==1.10.2
+torch==1.12.1+cu116
 opencv-python==4.6.0.66
+tqdm==4.61.1
