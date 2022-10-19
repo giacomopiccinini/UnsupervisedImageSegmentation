@@ -1,64 +1,77 @@
-def train(image):
+def train(args):
 
     """ Train Segmentation Network"""
 
     import torch
-    from torch.optim import SGD
-    from Code.Utilities.loading_utils import load
-    from Code.Networks.Architectures.segnet import SegNet
-    from Code.Networks.Losses.loss import loss_function
-    from Code.Modules.B_plot import plot
+    import numpy as np
 
-    # Load training parameters
-    training_parameters     = load("train.yaml")
-    architecture_parameters = load("architecture.yaml")
+    from tqdm import tqdm
+    from torch.optim      import SGD
+    from torch.utils.data import DataLoader
 
-    globals().update(training_parameters)
-    globals().update(architecture_parameters)
+    from Code.Network.segnet import SegNet
+    from Code.Loss.loss import loss_function
+    from Code.Classes.Data import Data
 
     # Initialise network
-    model = SegNet(image.data.size(1))
-
-    # Enable CUDA
+    model = SegNet(args)
+    
+    # Enable CUDA and set up GPU
     if torch.cuda.is_available():
         model.cuda()
-    model.train()
+
+    model.train()   
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    model.to(device = device)
 
     # Set optimizer
-    optimizer = SGD(model.parameters(), lr=learning_rate, momentum=momentum)
+    optimizer = SGD(model.parameters(), lr=args.learning_rate, momentum=args.momentum)
 
-    for epoch in range(epochs):
+    # Load dataset and loader for PyTorch
+    dataset = Data(args.path)
+    loader  = DataLoader(dataset)
+    
+    print("\nTraining the model...")
+    # Star training
+    for epoch in range(args.epochs):
+        
+        print('\nEpoch:', epoch + 1, '/', args.epochs)
 
-        # Forwarding
-        optimizer.zero_grad()
+        # Load batch and discard file names
+        for batch, _ in tqdm(loader):
+            
+            batch = batch.to(device = device)
 
-        # Pass image through convolutional network
-        response_map = model(image.data)[0]
+            # Forwarding
+            optimizer.zero_grad()
 
-        # Reshape image
-        response_map = response_map.permute(1, 2, 0).contiguous().view(-1, n_classes)
+            # Pass the batch of images through SegNet
+            response_map = model(batch)
 
-        # Plot current status of segmentation and extract unique labels
-        labels = plot(image, response_map)
+            # Apply argmax on every row, keep only index (= class), throw away value
+            _, indexed_images = torch.max(response_map, 1)
 
-        # Compute loss function
-        loss = loss_function(response_map, image.shape[1], image.shape[0])
+            # Find the number of unique labels that identify segmented regions
+            n_labels = len(np.unique(indexed_images.data.cpu().numpy()))
 
-        # Back propagate
-        loss.backward()
+            # Compute the loss function given the response map
+            loss = loss_function(response_map, args)
 
-        # Take a step in the optimizer
-        optimizer.step()
+            # Back propagate
+            loss.backward()
+
+            # Take a step in the optimizer
+            optimizer.step()
 
         # Print summary on epoch end
-        print(epoch, '/', epochs, '|', ' label num :', labels, ' | loss :', loss.item())
+        print('\nResults: ', 'Number of labels :', n_labels, ' | Loss :', loss.item())
 
         # Check that we do not obtain less labels than needed
-        if labels <= min_classes:
+        if n_labels <= args.min_classes:
 
             print("Reached minimum number of labels, exiting.")
 
             # If reached minimum, stop training
             break
 
-    torch.save(model, "Model/model.pt")
+    return model
