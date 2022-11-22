@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # Plot the segmentation for each image in the train set
     clock.lap("Saving segmentation")
-    plot(model, args)    
+    plot(model, args)
 
     clock.lap()
     clock.summary()
