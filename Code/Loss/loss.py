@@ -1,7 +1,7 @@
-from continuity import continuity_loss
-from similarity import similarity_loss
-from max_area import max_area_loss
-from min_area import min_area_loss
+from Code.Loss.continuity import continuity_loss
+from Code.Loss.similarity import similarity_loss
+from Code.Loss.max_area import max_area_loss
+from Code.Loss.min_area import min_area_loss
 
 
 def loss_function(response_map, args):
