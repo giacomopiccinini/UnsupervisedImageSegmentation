@@ -36,8 +36,8 @@ def parse():
     )
     parser.add_argument(
         "--n_classes",
-        const=15,
-        default=15,
+        const=100,
+        default=100,
         nargs="?",
         type=int,
         help="Integer for number of classes we begin with",
@@ -78,16 +78,16 @@ def parse():
     )
     parser.add_argument(
         "--momentum",
-        const=0.9,
-        default=0.9,
+        const=0.4,
+        default=0.4,
         nargs="?",
         type=float,
         help="Float for momentum during training",
     )
     parser.add_argument(
         "--epochs",
-        const=30,
-        default=30,
+        const=50,
+        default=50,
         nargs="?",
         type=int,
         help="Integer for  number of epochs during training",
@@ -135,6 +135,13 @@ def parse():
         nargs="?",
         type=str,
         help="String for saved model",
+    )
+
+    # Show results of segmentation in real time
+    parser.add_argument(
+        "--show",
+        action="store_true",
+        help="Show (or not) the results of segmentation",
     )
 
     args = parser.parse_args()
