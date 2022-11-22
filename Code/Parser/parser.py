@@ -99,32 +99,50 @@ def parse():
         const=2,
         default=2,
         nargs="?",
-        type=int,
-        help="Integer for weight of similarity loss function",
+        type=float,
+        help="Float for weight of similarity loss function",
     )
     parser.add_argument(
         "--nu",
         const=2,
         default=2,
         nargs="?",
-        type=int,
-        help="Integer for weight of continuity loss function (overall)",
+        type=float,
+        help="Float for weight of continuity loss function (overall)",
     )
     parser.add_argument(
         "--nu_x",
         const=1,
         default=1,
         nargs="?",
-        type=int,
-        help="Integer for weight of continuity loss function along x",
+        type=float,
+        help="Float for weight of continuity loss function along x",
     )
     parser.add_argument(
         "--nu_y",
         const=1,
         default=1,
         nargs="?",
-        type=int,
-        help="Integer for weight of continuity loss function along y",
+        type=float,
+        help="Float for weight of continuity loss function along y",
+    )
+
+    parser.add_argument(
+        "--M",
+        const=1,
+        default=1,
+        nargs="?",
+        type=float,
+        help="Float for weight of max area loss function",
+    )
+
+    parser.add_argument(
+        "--m",
+        const=1,
+        default=1,
+        nargs="?",
+        type=float,
+        help="Float for weight of min area loss function",
     )
 
     # Parse model parameters
