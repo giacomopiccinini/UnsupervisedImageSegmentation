@@ -2,6 +2,7 @@ def train(args):
 
     """Train Segmentation Network"""
 
+    import cv2
     import torch
     import numpy as np
 
@@ -37,9 +38,10 @@ def train(args):
 
         print("\nEpoch:", epoch + 1, "/", args.epochs)
 
-        # Load batch and discard file names
-        for batch, _ in tqdm(loader):
+        # Load batch
+        for batch, names in tqdm(loader):
 
+            # Send batch to device
             batch = batch.to(device=device)
 
             # Forwarding
@@ -50,6 +52,35 @@ def train(args):
 
             # Apply argmax on every row, keep only index (= class), throw away value
             _, indexed_images = torch.max(response_map, 1)
+
+            # If show flag is true, show the segmented image as training proceeds
+            if args.show:
+
+                # Convert the batch of images into numpy arrays
+                segmented_images = indexed_images.data.cpu().numpy()
+
+                # Ensure data type is correct (they are just masks)
+                segmented_images = segmented_images.astype("uint8")
+
+                for segmented_image, name in zip(segmented_images, names):
+
+                    # Find number of distinct classes
+                    n_classes = len(np.unique(segmented_image))
+
+                    # Assign them a random colour
+                    label_colours = np.random.randint(255, size=(n_classes, 3))
+
+                    # Colour the image accordingly
+                    segmented_image = np.array(
+                        [label_colours[c % n_classes] for c in segmented_image]
+                    )
+
+                    # Convert to uint8 to make sure it is displayable
+                    segmented_image = segmented_image.astype("uint8")
+
+                    # Show images
+                    cv2.imshow(name, segmented_image)
+                    cv2.waitKey(10)
 
             # Find the number of unique labels that identify segmented regions
             n_labels = len(np.unique(indexed_images.data.cpu().numpy()))
