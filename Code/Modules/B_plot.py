@@ -7,9 +7,10 @@ from torch.utils.data import DataLoader
 
 from Code.Classes.Data import Data
 
+
 def plot(model, args):
 
-    """ Plot final segmented model"""    
+    """Plot final segmented model"""
 
     use_cuda = torch.cuda.is_available()
 
@@ -17,9 +18,9 @@ def plot(model, args):
     if use_cuda:
         model.cuda()
     model.train()
-        
-    device = torch.device('cuda:0' if use_cuda else 'cpu')
-    model.to(device = device)
+
+    device = torch.device("cuda:0" if use_cuda else "cpu")
+    model.to(device=device)
 
     # Set model to evaluation to make sure layers behave correctly in inference
     model.eval()
@@ -29,8 +30,9 @@ def plot(model, args):
     loader = DataLoader(dataset)
 
     for batch, names in tqdm(loader):
-        
-        batch = batch.to(device = device)
+
+        # Send batch to device
+        batch = batch.to(device=device)
 
         # Pass image through SegNet
         response_map = model(batch)
@@ -42,7 +44,7 @@ def plot(model, args):
         segmented_images = indexed_images.data.cpu().numpy()
 
         # Ensure data type is correct (they are just masks)
-        segmented_images = segmented_images.astype('uint8')
+        segmented_images = segmented_images.astype("uint8")
 
         for segmented_image, name in zip(segmented_images, names):
 
@@ -53,7 +55,9 @@ def plot(model, args):
             label_colours = np.random.randint(255, size=(n_classes, 3))
 
             # Colour the image accordingly
-            segmented_image = np.array([label_colours[c % n_classes] for c in segmented_image])
+            segmented_image = np.array(
+                [label_colours[c % n_classes] for c in segmented_image]
+            )
 
             # Save images
             cv2.imwrite(f"Output/segmentation.png", segmented_image)
