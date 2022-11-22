@@ -37,9 +37,11 @@ There are various options available:
 - `--learning_rate <float>`: learning rate for the SGD optimizer;
 - `--momentum <float>`: momentum for the SGD optimizer;
 - `--epochs <integer>`: epochs for training;
-- `--mu <integer>`: integer for weight of similarity loss function;
-- `--nu <integer>`: integer for weight of continuity loss function (overall);
-- `--nu_x <integer>`: integer for weight of continuity loss function along x;
-- `--nu_y <integer>`: integer for weight of continuity loss function along y;
+- `--mu <float>`: float for weight of similarity loss function;
+- `--nu <float>`: float for weight of continuity loss function (overall);
+- `--nu_x <float>`: float for weight of continuity loss function along x;
+- `--nu_y <float>`: float for weight of continuity loss function along y;
+- `--M <float>`: float for weight of max area loss function;
+- `--m <float>`: float for weight of min area loss function;
 - `--model_path <path>`: path for saved model;
 - `--show`: show the results of segmentation as the training runs.
