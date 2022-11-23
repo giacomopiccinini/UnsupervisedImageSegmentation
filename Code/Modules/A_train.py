@@ -31,6 +31,8 @@ def train(args):
     # Load dataset and loader for PyTorch
     dataset = Data(args.path)
     loader = DataLoader(dataset)
+    
+    label_colours = np.random.randint(255, size=(args.n_classes, 3))
 
     print("\nTraining the model...")
     # Star training
@@ -55,7 +57,7 @@ def train(args):
 
             # If show flag is true, show the segmented image as training proceeds
             if args.show:
-
+                
                 # Convert the batch of images into numpy arrays
                 segmented_images = indexed_images.data.cpu().numpy()
 
@@ -64,17 +66,11 @@ def train(args):
 
                 for segmented_image, name in zip(segmented_images, names):
 
-                    # Find number of distinct classes
-                    n_classes = len(np.unique(segmented_image))
-
-                    # Assign them a random colour
-                    label_colours = np.random.randint(255, size=(n_classes, 3))
-
                     # Colour the image accordingly
                     segmented_image = np.array(
-                        [label_colours[c % n_classes] for c in segmented_image]
+                       [label_colours[c] for c in segmented_image]
                     )
-
+                    
                     # Convert to uint8 to make sure it is displayable
                     segmented_image = segmented_image.astype("uint8")
 
