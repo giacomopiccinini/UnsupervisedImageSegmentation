@@ -13,6 +13,7 @@ def train(args):
     from Code.Network.segnet import SegNet
     from Code.Loss.loss import loss_function
     from Code.Classes.Data import Data
+    from Code.Techniques.PieChart.pie import pie_chart
 
     # Initialise network
     model = SegNet(args)
@@ -67,16 +68,25 @@ def train(args):
                 for segmented_image, name in zip(segmented_images, names):
 
                     # Colour the image accordingly
-                    segmented_image = np.array(
+                    coloured_image = np.array(
                         [label_colours[c] for c in segmented_image]
                     )
-
+                    
                     # Convert to uint8 to make sure it is displayable
-                    segmented_image = segmented_image.astype("uint8")
-
+                    coloured_image = coloured_image.astype("uint8")
+                    
                     # Show images
-                    cv2.imshow(name, segmented_image)
+                    cv2.imshow(name, coloured_image)
                     cv2.waitKey(10)
+                    
+                    if args.pie:
+                    
+                        # Create pie chart
+                        pie = pie_chart(segmented_image, label_colours)
+                    
+                        # Show images
+                        cv2.imshow("Segmentation regions by area", pie)
+                        cv2.waitKey(10)
 
             # Find the number of unique labels that identify segmented regions
             n_labels = len(np.unique(indexed_images.data.cpu().numpy()))
