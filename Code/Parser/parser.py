@@ -161,6 +161,13 @@ def parse():
         action="store_true",
         help="Show (or not) the results of segmentation",
     )
+    
+    # Show pie chart
+    parser.add_argument(
+        "--pie",
+        action="store_true",
+        help="Show (or not) the pie chart of segmentation",
+    )
 
     args = parser.parse_args()
 
