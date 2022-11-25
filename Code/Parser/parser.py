@@ -168,6 +168,23 @@ def parse():
         action="store_true",
         help="Show (or not) the pie chart of segmentation",
     )
+    
+    # Show pie chart
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Fix (or not) the boundary",
+    )
+    
+    # Force reduction to n classes
+    parser.add_argument(
+        "--force",
+        const=2,
+        default=2,
+        nargs="?",
+        type=int,
+        help="Integer indicating whether to force reduction to n classes (based on NNs)",
+    )
 
     args = parser.parse_args()
 
