@@ -24,12 +24,10 @@ class Data(Dataset):
         # Check if argument is a file or a directory (and check if it exists)
         # If path is a directory, load all files recursively
         if path.is_dir():
-            files = list(
-                path.rglob("*")
-            )  
+            files = list(path.rglob("*"))
         # If is a single file, load it alone
         elif path.is_file():
-            files = [path]  
+            files = [path]
         else:
             raise Exception(f"ERROR: {path} does not exist")
 

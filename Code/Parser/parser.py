@@ -161,21 +161,21 @@ def parse():
         action="store_true",
         help="Show (or not) the results of segmentation",
     )
-    
+
     # Show pie chart
     parser.add_argument(
         "--pie",
         action="store_true",
         help="Show (or not) the pie chart of segmentation",
     )
-    
+
     # Show pie chart
     parser.add_argument(
         "--fix",
         action="store_true",
         help="Fix (or not) the boundary",
     )
-    
+
     # Force reduction to n classes
     parser.add_argument(
         "--force",

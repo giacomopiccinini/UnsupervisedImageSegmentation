@@ -71,25 +71,25 @@ def train(args):
                     coloured_image = np.array(
                         [label_colours[c] for c in segmented_image]
                     )
-                    
+
                     # Convert to uint8 to make sure it is displayable
                     coloured_image = coloured_image.astype("uint8")
-                    
+
                     # Show images
                     cv2.imshow(name, coloured_image)
-                    if args.epochs==epoch+1:
+                    if args.epochs == epoch + 1:
                         cv2.waitKey(0)
                     else:
                         cv2.waitKey(10)
-                    
+
                     if args.pie:
-                    
+
                         # Create pie chart
                         pie = pie_chart(segmented_image, label_colours)
-                    
+
                         # Show images
                         cv2.imshow("Segmentation regions by area", pie)
-                        if args.epochs==epoch+1:
+                        if args.epochs == epoch + 1:
                             cv2.waitKey(0)
                         else:
                             cv2.waitKey(10)
