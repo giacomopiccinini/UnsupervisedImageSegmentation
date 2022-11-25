@@ -60,4 +60,4 @@ def plot(model, args):
             )
 
             # Save images
-            cv2.imwrite(f"Output/segmentation.png", segmented_image)
+            cv2.imwrite(f"Output/{name}", segmented_image)
