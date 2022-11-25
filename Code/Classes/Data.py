@@ -22,12 +22,14 @@ class Data(Dataset):
         path = Path(path).absolute()
 
         # Check if argument is a file or a directory (and check if it exists)
+        # If path is a directory, load all files recursively
         if path.is_dir():
             files = list(
                 path.rglob("*")
-            )  # If path is a directory, load all files recursively
+            )  
+        # If is a single file, load it alone
         elif path.is_file():
-            files = [path]  # If is a single file, load it alone
+            files = [path]  
         else:
             raise Exception(f"ERROR: {path} does not exist")
 
@@ -37,8 +39,7 @@ class Data(Dataset):
         # Store info
         self.path = path
         self.n_images = len(files)
-        self.names = [file.stem for file in files]
-        self.extensions = [file.suffix for file in files]
+        self.names = [file.name for file in files]
         self.images = [file.__str__() for file in files]
 
     def __len__(self):
@@ -57,5 +58,5 @@ class Data(Dataset):
         # Create Image class instance
         image = Image(image_path)
 
-        # Return the actual image (i.e. numpy array) and its name ( "Pattern<XY>/<name>.png")
+        # Return the actual image (i.e. numpy array) and its name
         return image.data[0], self.names[index]
