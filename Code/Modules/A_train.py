@@ -77,7 +77,10 @@ def train(args):
                     
                     # Show images
                     cv2.imshow(name, coloured_image)
-                    cv2.waitKey(10)
+                    if args.epochs==epoch+1:
+                        cv2.waitKey(0)
+                    else:
+                        cv2.waitKey(10)
                     
                     if args.pie:
                     
@@ -86,7 +89,10 @@ def train(args):
                     
                         # Show images
                         cv2.imshow("Segmentation regions by area", pie)
-                        cv2.waitKey(10)
+                        if args.epochs==epoch+1:
+                            cv2.waitKey(0)
+                        else:
+                            cv2.waitKey(10)
 
             # Find the number of unique labels that identify segmented regions
             n_labels = len(np.unique(indexed_images.data.cpu().numpy()))
