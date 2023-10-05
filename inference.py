@@ -1,15 +1,37 @@
+from argparse import Namespace
+
 import cv2
 import numpy as np
 import torch
+import typer
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+from yaml import safe_load
 
 from Code.Classes.Data import Data
+from Code.Network.segnet import SegNet
 
 
-def plot(model, args):
+def main(
+    data_path: str,
+    model_path: str = "Model/model.pt",
+    parameters_path: str = "Model/parameters.yaml",
+):
 
-    """Plot final segmented model"""
+    # Get parameters
+    with open(parameters_path, "r") as file:
+        parameters = safe_load(file)
+        parameters = Namespace(**parameters)
+
+    # Initialise model
+    model = SegNet(parameters)
+
+    # Enable CUDA
+    if torch.cuda.is_available():
+        model.cuda()
+
+    # Load model
+    model.load_state_dict(torch.load(model_path))
 
     use_cuda = torch.cuda.is_available()
 
@@ -24,13 +46,12 @@ def plot(model, args):
     # Set model to evaluation to make sure layers behave correctly in inference
     model.eval()
 
-    # Load dataset and loader for PyTorch
-    dataset = Data(args.path)
+    # Load dataset and instantiate dataloader
+    dataset = Data(data_path)
     loader = DataLoader(dataset)
 
     for batch, names in tqdm(loader):
 
-        # Send batch to device
         batch = batch.to(device=device)
 
         # Pass image through SegNet
@@ -60,3 +81,7 @@ def plot(model, args):
 
             # Save images
             cv2.imwrite(f"Output/{name}", segmented_image)
+
+
+if __name__ == "__main__":
+    typer.run(main)

@@ -2,9 +2,10 @@ if __name__ == "__main__":
 
     import torch
     from chronopy.Clock import Clock
-    from Code.Parser.parser import parse
+
     from Code.Modules.A_train import train
     from Code.Modules.B_plot import plot
+    from Code.Parser.parser import parse
 
     clock = Clock()
 

@@ -3,16 +3,16 @@ def train(args):
     """Train Segmentation Network"""
 
     import cv2
-    import torch
     import numpy as np
-
-    from tqdm import tqdm
+    import torch
+    import yaml
     from torch.optim import SGD
     from torch.utils.data import DataLoader
+    from tqdm import tqdm
 
-    from Code.Network.segnet import SegNet
-    from Code.Loss.loss import loss_function
     from Code.Classes.Data import Data
+    from Code.Loss.loss import loss_function
+    from Code.Network.segnet import SegNet
     from Code.Techniques.PieChart.pie import pie_chart
 
     # Initialise network
@@ -117,27 +117,7 @@ def train(args):
             # If reached minimum, stop training
             break
 
-    if args.force:
-
-        for indexed_image in indexed_images:
-
-            # Convert to uint8
-            indexed_image = indexed_image.to(torch.uint8)
-
-            # Count (unique) segmented regions with their area
-            regions, counts = torch.unique(indexed_image, return_counts=True)
-
-            # Sort regions by counting (most populated first)
-            sorted_regions = regions[torch.flip(torch.argsort(counts), dims=(0,))]
-
-            # Regions to keep
-            keep = sorted_regions[: args.force]
-
-            # Regions to force to other
-            refactor = sorted_regions[args.force :]
-
-            # Extract mask for regions to be refactored and kept
-            keep_mask = torch.isin(indexed_image, keep)
-            refactor_mask = torch.isin(indexed_image, refactor)
+    with open("Model/parameters.yaml", "w") as file:
+        yaml.dump(vars(args), file)
 
     return model

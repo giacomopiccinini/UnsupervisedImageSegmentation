@@ -9,3 +9,5 @@ pipreqs
 numpy
 tqdm
 python-decouple
+isort
+typer
