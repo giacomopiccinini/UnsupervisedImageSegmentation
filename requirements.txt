@@ -4,3 +4,8 @@ PyYAML==6.0
 torch==1.12.1+cu116
 opencv-python==4.6.0.66
 tqdm==4.61.1
+black
+pipreqs
+numpy
+tqdm
+python-decouple

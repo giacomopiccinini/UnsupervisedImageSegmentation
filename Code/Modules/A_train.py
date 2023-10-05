@@ -117,4 +117,27 @@ def train(args):
             # If reached minimum, stop training
             break
 
+    if args.force:
+
+        for indexed_image in indexed_images:
+
+            # Convert to uint8
+            indexed_image = indexed_image.to(torch.uint8)
+
+            # Count (unique) segmented regions with their area
+            regions, counts = torch.unique(indexed_image, return_counts=True)
+
+            # Sort regions by counting (most populated first)
+            sorted_regions = regions[torch.flip(torch.argsort(counts), dims=(0,))]
+
+            # Regions to keep
+            keep = sorted_regions[: args.force]
+
+            # Regions to force to other
+            refactor = sorted_regions[args.force :]
+
+            # Extract mask for regions to be refactored and kept
+            keep_mask = torch.isin(indexed_image, keep)
+            refactor_mask = torch.isin(indexed_image, refactor)
+
     return model
